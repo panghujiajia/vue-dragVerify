@@ -65,13 +65,20 @@ export default {
       var startX = this.startX; //鼠标按下的X坐标
       var moveX = e.screenX; //鼠标移动的X坐标
       var distance = moveX - startX; //滑块移动的距离
-      if (this.lock) {
-        if (distance >= this.dragWidth - this.ballWidth) {
-          distance = this.dragWidth - this.ballWidth;
-        } else if (distance <= 0) {
-          distance = 0;
-        }
-        this.dragLeft = distance;
+      var timer;
+      // 节流
+      if (!timer) {
+        timer = setTimeout(() => {
+          if (this.lock) {
+            if (distance >= this.dragWidth - this.ballWidth) {
+              distance = this.dragWidth - this.ballWidth;
+            } else if (distance <= 0) {
+              distance = 0;
+            }
+            this.dragLeft = distance;
+          }
+          timer = null;
+        }, 20);
       }
     },
     handleMouseup() {
