@@ -24,9 +24,10 @@
                     ballWidth: 40, //滑块的宽度
                     defaultText: "滑动到右侧验证", //滑块滑动前的提示语
                     successText: "验证通过" //滑块滑动成功后的提示语
-                }
+                },
+                dragStatus:false,//滑块默认状态
             }
         }
     }
-    <drag-verify v-bind="options"></drag-verify>
+    <drag-verify v-bind="options" v-bind:status="dragStatus"></drag-verify>
 ```

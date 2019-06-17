@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="dragOut" :style="{width:dragWidth+'px',height:dragHeight+'px'}">
-      <p :style="{lineHeight:dragHeight +'px'}">{{dragStatus ? successText : defaultText}}</p>
+      <p v-if="dragStatus" :style="{lineHeight:dragHeight +'px',color:'#fff'}">{{successText}}</p>
+      <p v-else :style="{lineHeight:dragHeight +'px',color:'#777'}">{{defaultText}}</p>
       <div class="successBox" :style="{width:dragLeft +'px'}"></div>
       <div
         class="dragBall"
@@ -15,6 +16,11 @@
 export default {
   name: "dragVerify",
   props: {
+    status: {
+      // 滑块状态
+      type: Boolean,
+      default: false
+    },
     dragWidth: {
       //容器的宽度
       type: Number,
@@ -44,9 +50,18 @@ export default {
   data() {
     return {
       lock: false, //检测鼠标按下后才监听鼠标移动事件
-      dragStatus: false, //滑块状态
+      dragStatus: this.status, //滑块默认状态，由初始传入的值决定
       dragLeft: 0 //滑块的初始坐标
     };
+  },
+  watch: {
+    // 传入的值变化后，修改相应的dragStatus，并且将滑块复原
+    status(newValue, oldValue) {
+      this.dragStatus = newValue;
+      if (!newValue) {
+        this.dragLeft = 0;
+      }
+    }
   },
   mounted() {
     // 给window绑定鼠标松开和移动事件
@@ -89,6 +104,7 @@ export default {
       } else {
         this.dragStatus = true; //滑块状态修改
       }
+      this.$emit("getDragStatus", this.dragStatus);
       this.lock = false;
     }
   }
@@ -97,35 +113,35 @@ export default {
 <style lang="less" scoped>
 .dragOut {
   position: relative;
-  overflow: hidden;
   height: 100%;
   width: 100%;
   box-shadow: 0 0 2px #dedede;
+  border-radius: 5px;
   -webkit-user-select: none;
-  background: #ccc;
+  background: #ebebeb;
   user-select: none;
-  p {
-    position: absolute;
-    z-index: 20;
-    width: 100%;
-    height: 100%;
-    color: #fff;
-    text-shadow: 0 0 5px #222;
-  }
-  .successBox {
-    height: 100%;
-    width: 0;
-    position: absolute;
-    background: #67c23a;
-  }
-  .dragBall {
-    position: absolute;
-    left: 0;
-    z-index: 30;
-    height: 100%;
-    background: #fff;
-    cursor: move;
-  }
+}
+p {
+  position: absolute;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+}
+.successBox {
+  height: 100%;
+  width: 0;
+  position: absolute;
+  background: #a5dd8a;
+  border-radius: 5px 0 0 5px;
+}
+.dragBall {
+  position: absolute;
+  left: 0;
+  z-index: 30;
+  height: 100%;
+  background: #fff;
+  border: 1px solid #cecece;
+  cursor: move;
 }
 </style>
 
