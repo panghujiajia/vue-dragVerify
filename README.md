@@ -1,7 +1,7 @@
-# myComponents
+# dragVerify
 
 #### 介绍
-个人写的VUE组件
+VUE滑块验证组件
 
 #### 使用说明
 
